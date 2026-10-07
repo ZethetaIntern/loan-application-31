@@ -331,7 +331,7 @@ function ReviewRow({
         {label}
       </span>
 
-      <span className="text-sm font-medium text-slate-900 sm:text-right">
+      <span className="break-words text-sm font-medium text-slate-900 sm:max-w-[60%] sm:text-right">
         {value || "Not provided"}
       </span>
     </div>
@@ -348,21 +348,24 @@ function DocumentStatus({
   fileName: string;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-lg border border-slate-200 bg-white p-3">
-      <div>
+    <div className="flex w-full min-w-0 flex-col gap-3 rounded-lg border border-slate-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+      <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-slate-800">
           {label}
         </p>
 
         {uploaded && fileName && (
-          <p className="mt-1 max-w-[250px] truncate text-xs text-slate-500">
+          <p
+            className="mt-1 break-all text-xs leading-5 text-slate-500 sm:truncate"
+            title={fileName}
+          >
             {fileName}
           </p>
         )}
       </div>
 
       <span
-        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+        className={`w-fit shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
           uploaded
             ? "bg-green-100 text-green-700"
             : "bg-red-100 text-red-700"

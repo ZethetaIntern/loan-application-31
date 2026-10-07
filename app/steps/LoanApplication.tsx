@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useLoanStore } from "../store/loanStore";
+
 import PersonalDetails from "./PersonalDetails";
 import ContactDetails from "./ContactDetails";
 import AddressDetails from "./AddressDetails";
 import EmploymentDetails from "./EmploymentDetails";
 import LoanDetails from "./LoanDetails";
 import Documents from "./Documents";
+
 import PreApprovalSummary from "../components/PreApprovalSummary";
 import SignaturePad from "../components/SignaturePad";
 import ApplicationReview from "../components/ApplicationReview";
@@ -26,6 +29,8 @@ const steps = [
 ];
 
 export default function LoanApplication() {
+  const router = useRouter();
+
   const currentStep = useLoanStore(
     (state) => state.currentStep
   );
@@ -458,9 +463,7 @@ export default function LoanApplication() {
     }
 
     // Everything is valid
-    alert(
-      "Loan application submitted successfully!"
-    );
+    router.push("/success");
   };
 
   // -----------------------------
@@ -533,7 +536,7 @@ export default function LoanApplication() {
           Complete your application
         </h1>
 
-        <div className="mt-3 flex items-center gap-3">
+        <div className="mt-3 flex flex-wrap items-center gap-3">
           <p className="text-sm text-slate-500">
             Step {currentStep + 1} of {steps.length}
           </p>
@@ -552,9 +555,9 @@ export default function LoanApplication() {
         </div>
       </div>
 
-      {/* Progress */}
-      <div className="mb-8">
-        <div className="flex items-center">
+      {/* Responsive Progress */}
+      <div className="mb-8 overflow-x-auto pb-3">
+        <div className="flex min-w-[760px] items-start px-1 sm:min-w-0">
           {steps.map((step, index) => {
             const completed = index < currentStep;
             const active = index === currentStep;
@@ -562,11 +565,15 @@ export default function LoanApplication() {
             return (
               <div
                 key={step}
-                className="flex flex-1 items-center last:flex-none"
+                className={`flex items-start ${
+                  index === steps.length - 1
+                    ? "flex-none"
+                    : "min-w-[76px] flex-1"
+                }`}
               >
-                <div className="flex flex-col items-center">
+                <div className="flex min-w-[58px] flex-col items-center">
                   <div
-                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-semibold ${
+                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-semibold transition sm:h-10 sm:w-10 ${
                       completed || active
                         ? "border-blue-600 bg-blue-600 text-white"
                         : "border-slate-300 bg-white text-slate-400"
@@ -576,7 +583,7 @@ export default function LoanApplication() {
                   </div>
 
                   <span
-                    className={`mt-2 hidden text-xs font-medium sm:block ${
+                    className={`mt-2 max-w-[72px] text-center text-[10px] font-medium leading-4 sm:max-w-[90px] sm:text-xs ${
                       active || completed
                         ? "text-blue-600"
                         : "text-slate-400"
@@ -588,7 +595,7 @@ export default function LoanApplication() {
 
                 {index < steps.length - 1 && (
                   <div
-                    className={`mx-2 h-0.5 flex-1 ${
+                    className={`mt-4 h-0.5 flex-1 ${
                       index < currentStep
                         ? "bg-blue-600"
                         : "bg-slate-200"
@@ -602,17 +609,17 @@ export default function LoanApplication() {
       </div>
 
       {/* Form Card */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
         {renderStepContent()}
 
         {/* Navigation */}
-        <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
+        <div className="mt-6 flex items-center justify-between gap-3 border-t border-slate-100 pt-6">
           {/* Back */}
           <button
             type="button"
             onClick={previousStep}
             disabled={isFirstStep}
-            className="rounded-xl border border-slate-200 px-6 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl border border-slate-200 px-4 py-3 font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 sm:px-6"
           >
             Back
           </button>
@@ -622,7 +629,7 @@ export default function LoanApplication() {
             <button
               type="button"
               onClick={submitApplication}
-              className="rounded-xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
+              className="rounded-xl bg-green-600 px-4 py-3 font-semibold text-white transition hover:bg-green-700 sm:px-6"
             >
               Submit Application
             </button>
@@ -630,7 +637,7 @@ export default function LoanApplication() {
             <button
               type="button"
               onClick={nextStep}
-              className="rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
+              className="rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 sm:px-6"
             >
               Continue
             </button>
